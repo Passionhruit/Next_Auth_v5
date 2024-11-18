@@ -5,20 +5,28 @@ import { db } from "@/lib/db";
 
 import { getUserById } from "@/data/user";
 
-export const {
-  handlers: { GET, POST },
-  auth,
-  signIn,
-  signOut,
-} = NextAuth({
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  pages: {
+    // always redirect to this page when something goes wrong
+    signIn: "/auth/login",
+    error: "auth/error",
+  },
+  events: {
+    async linkAccount({ user }) {
+      await db.user.update({
+        where: { id: user.id },
+        data: { emailVerified: new Date() },
+      });
+    },
+  },
   callbacks: {
     // async signIn({ user }) {
-    //   const existingUser = await getUserById(user.id as string);
+    //   // const existingUser = await getUserById(user.id as string);
 
-    //   // we are not gonna allow user to login
-    //   if (!existingUser || !existingUser.emailVerified) {
-    //     return false;
-    //   }
+    //   // // we are not gonna allow user to login
+    //   // if (!existingUser || !existingUser.emailVerified) {
+    //   //   return false;
+    //   // }
 
     //   return true;
     // },
