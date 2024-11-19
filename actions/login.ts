@@ -7,6 +7,11 @@ import { signIn } from "@/auth";
 import { LoginSchema } from "@/schemas";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
+import { sendVerificationEmail } from "@/lib/mail";
+
+import { generateVerificationToken } from "@/lib/tokens";
+import { getUserByEmail } from "@/data/user";
+
 export const login = async (values: z.infer<typeof LoginSchema>) => {
   const validatedFields = LoginSchema.safeParse(values);
   console.log(LoginSchema.safeParse(values));
@@ -22,6 +27,28 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
   // };
 
   const { email, password } = validatedFields.data;
+
+  const existingUser = await getUserByEmail(email);
+
+  // 현재 유저가 없거나, 유저의 이메일이 생략됐거나, 유저의 패스워드가 없을경우 (OAuth login 인 경우)
+  if (!existingUser || !existingUser.email || !existingUser.password) {
+    return { error: "Email does not exist!" };
+  }
+
+  if (!existingUser.emailVerified) {
+    const verificationToken = await generateVerificationToken(
+      existingUser.email
+    );
+
+    await sendVerificationEmail(
+      verificationToken.email,
+      verificationToken.token
+    );
+
+    return {
+      success: "Confirmation email sent!",
+    };
+  }
 
   try {
     await signIn("credentials", {
