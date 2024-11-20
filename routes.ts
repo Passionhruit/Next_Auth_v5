@@ -6,6 +6,7 @@
  *
  */
 
+// not only for user
 export const publicRoutes = ["/", "/auth/new-verification"];
 /**
  *
@@ -14,7 +15,12 @@ export const publicRoutes = ["/", "/auth/new-verification"];
  * @type { string[] }
  *
  */
-export const authRoutes = ["/auth/login", "/auth/register", "/auth/error"];
+export const authRoutes = [
+  "/auth/reset",
+  "/auth/login",
+  "/auth/register",
+  "/auth/error",
+];
 
 /**
  *
