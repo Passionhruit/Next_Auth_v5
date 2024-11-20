@@ -6,7 +6,7 @@
  *
  */
 
-// not only for user
+// for logged in, logged out user
 export const publicRoutes = ["/", "/auth/new-verification"];
 /**
  *
@@ -15,11 +15,14 @@ export const publicRoutes = ["/", "/auth/new-verification"];
  * @type { string[] }
  *
  */
+
+// it is only gonna available for logged out user
 export const authRoutes = [
   "/auth/reset",
   "/auth/login",
   "/auth/register",
   "/auth/error",
+  "/auth/new-password",
 ];
 
 /**
