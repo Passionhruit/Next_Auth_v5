@@ -13,7 +13,6 @@ import { generateVerificationToken } from "@/lib/tokens";
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);
-  console.log(RegisterSchema.safeParse(values));
 
   if (!validatedFields.success) {
     return {
